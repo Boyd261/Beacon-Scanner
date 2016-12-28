@@ -284,7 +284,6 @@ public class ScanTransmitFragment extends Fragment {
         if (isBlueToothEnabled()) {
             isScanning = true;
             stopMenuButton.setVisible(true);
-            modeSwitchLayout.setVisibility(View.INVISIBLE);
             bindBeaconScannerService();
             startPulseAnimation();
         } else {
@@ -295,7 +294,6 @@ public class ScanTransmitFragment extends Fragment {
     private void stopScanning() {
         isScanning = false;
         stopMenuButton.setVisible(false);
-        modeSwitchLayout.setVisibility(View.VISIBLE);
 
         stopPulseAnimation();
         unbindBeaconScannerService();
@@ -323,13 +321,11 @@ public class ScanTransmitFragment extends Fragment {
     // TODO: 28/12/2016 implement transmitting
     private void startTransmitting() {
         isTransmitting = true;
-        modeSwitchLayout.setVisibility(View.GONE);
         startPulseAnimation();
     }
 
     private void stopTransmitting() {
         isTransmitting = false;
-        modeSwitchLayout.setVisibility(View.VISIBLE);
         stopPulseAnimation();
     }
 
@@ -339,6 +335,7 @@ public class ScanTransmitFragment extends Fragment {
 
         startButtonCircle.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.expand));
         startButton.setImageResource(R.drawable.ic_button_stop);
+        modeSwitchLayout.setVisibility(View.GONE);
         pulseRing.setVisibility(View.VISIBLE);
         pulseRing.startAnimation(pulseAnimation);
     }
@@ -346,8 +343,9 @@ public class ScanTransmitFragment extends Fragment {
     private void stopPulseAnimation() {
         startButtonCircle.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.contract));
         startButton.setImageDrawable(mode == SCANNING ? scanIcon : transmitIcon);
-        pulseRing.clearAnimation();
+        modeSwitchLayout.setVisibility(View.VISIBLE);
         pulseRing.setVisibility(View.GONE);
+        pulseRing.clearAnimation();
     }
 
     private boolean isBluetoothLEAvailable() {
