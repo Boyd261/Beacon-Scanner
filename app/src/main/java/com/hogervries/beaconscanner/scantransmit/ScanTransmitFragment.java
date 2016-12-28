@@ -52,7 +52,7 @@ import butterknife.Unbinder;
 import static com.hogervries.beaconscanner.data.service.BeaconScannerService.OnScanBeaconsListener;
 
 /**
- * Beacon BeaconScannerService, file created on 10/03/16.
+ * Beacon Scanner.
  * <p>
  * This fragment scans for beacons and transmits as a beacon.
  * If there are beacons in the area a list will be displayed.
