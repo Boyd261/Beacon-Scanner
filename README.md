@@ -1,14 +1,14 @@
-# Beacon-Scanner
+# Beacon-Scanner (Plus)
 
-Scans, transmits and shows details of every iBeacon, Eddystone (UID, URL frames) and AltBeacon in your area.
+Scans, transmits and shows details of every iBeacon/Eddystone beacon in your area.
 
-This app displays the following information of a beacon:
+The app displays the following information of a beacon:
 * UUID, Minor and Major values
 * Distance to beacon
 * TX and RSSI values
 * Bluetooth information like MAC address and more
 
-In the settings screen you can customise scanning and transmitting settings. Some of the settings include:
+In the settings menu you can customise scanning and transmitting settings. Some of the settings include:
 * Scan period time
 * Between scan periods time
 * How long beacons should remain in the cache
@@ -16,11 +16,15 @@ In the settings screen you can customise scanning and transmitting settings. Som
 
 You can download the app via [Google Play](https://play.google.com/store/apps/details?id=com.hogervries.beaconscanner) or you can fork this repo and install it via Android Studio.
 
-This application is an open source project. We're students in our 2nd year so any feedback is much appreciated!
+This application is an open source project. We're students in our 3rd year so any feedback is much appreciated!
 
 We're working hard on making this app as awesome as it could be. Some of the features we're working on right now are:
-* Saving and sending log files
-* Adding beacon formats for scanning
+* Beacon Scanner Plus(Replacing the old app)
+* Fixing annoying bugs
+* Saving and sending logs
+* Better settings
+* Background scanning
+* Adding an action for a particular beacon(opening an app/sending a message etc).
 
 # Credits
 
@@ -30,4 +34,3 @@ A huge thanks to the guys from Radius Networks for providing a great beacon libr
 
 * [AltBeacon](https://altbeacon.github.io/android-beacon-library/index.html): Beacon scan/transmit library.
 * [Butterknife](http://jakewharton.github.io/butterknife/): View injection library.
-* [Assent](https://github.com/afollestad/assent): Permissions library.
