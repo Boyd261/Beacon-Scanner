@@ -284,8 +284,8 @@ public class ScanTransmitFragment extends Fragment {
         if (isBlueToothEnabled()) {
             isScanning = true;
             stopMenuButton.setVisible(true);
-            bindBeaconScannerService();
             startPulseAnimation();
+            bindBeaconScannerService();
         } else {
             requestEnableBluetooth();
         }
