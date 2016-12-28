@@ -14,7 +14,7 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="62dp"
-        android:background="@color/colorWhite"
+        android:background="@color/white"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp">
 

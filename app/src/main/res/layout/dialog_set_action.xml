@@ -43,7 +43,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/colorDivider" />
+        android:background="@color/light_grey" />
 
     <LinearLayout
         android:id="@+id/action_open_app"
@@ -70,7 +70,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/colorDivider" />
+        android:background="@color/light_grey" />
 
     <TextView
         android:enabled="false"

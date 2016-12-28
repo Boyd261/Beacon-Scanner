@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="colorBlack">#FF000000</color>
     <color name="colorPrimary">#F44336</color>
     <color name="colorPrimaryDark">#D32F2F</color>
     <color name="colorAccent">#F44336</color>
     <color name="colorAccentSettings">#FF5252</color>
     <color name="colorBackground">#212121</color>
-    <color name="colorWhite">#FFFFFF</color>
-    <color name="colorGrey">#616161</color>
-    <color name="colorDivider">#d3d3d3</color>
-
-    <color name="colorYellow">#FFC107</color>
-    <color name="colorBlue">#03A9F4</color>
-    <color name="colorGreen">#4CAF50</color>
-    <color name="colorOrange">#FF5722</color>
+    <color name="white">#FFFFFF</color>
+    <color name="grey">#616161</color>
+    <color name="light_grey">#d3d3d3</color>
+    <color name="yellow">#FFC107</color>
+    <color name="blue">#03A9F4</color>
+    <color name="green">#4CAF50</color>
+    <color name="orange">#FF5722</color>
 
 </resources>

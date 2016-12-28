@@ -4,26 +4,26 @@
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorWhite</item>
+        <item name="colorAccent">@color/white</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="AppTheme.Detail" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorWhite</item>
+        <item name="colorAccent">@color/white</item>
     </style>
 
     <style name="AppTheme.Preference" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
-        <item name="android:windowBackground">@color/colorWhite</item>
+        <item name="android:windowBackground">@color/white</item>
     </style>
 
     <style name="AppTheme.TextAppearance" parent="@style/TextAppearance.AppCompat">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/colorGrey</item>
+        <item name="android:textColor">@color/grey</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
@@ -34,18 +34,18 @@
 
     <style name="AppTheme.TextAppearance.Toolbar" parent="AppTheme.TextAppearance">
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="AppTheme.TextAppearance.Intro.Title" parent="AppTheme.TextAppearance">
         <item name="android:textSize">23sp</item>
-        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
     <style name="AppTheme.TextAppearance.Intro.Description" parent="AppTheme.TextAppearance">
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
 

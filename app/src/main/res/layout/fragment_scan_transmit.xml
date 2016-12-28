@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/switch_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
+
+        <Switch
+            android:id="@+id/mode_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:padding="@dimen/padding"
+            android:thumbTint="@color/colorPrimary"
+            android:trackTint="@color/colorPrimary" />
+
+        <Button
+            android:id="@+id/scan_mode_button"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/mode_switch"
+            android:padding="@dimen/padding"
+            android:text="@string/scan_switch_label"
+            android:textColor="@color/white"
+            android:textSize="@dimen/small_text_size" />
+
+        <Button
+            android:id="@+id/transmit_mode_button"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/mode_switch"
+            android:padding="@dimen/padding"
+            android:text="@string/transmit_switch_label"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/small_text_size" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/start_button_circle"
+        android:layout_width="@dimen/scan_circle_size"
+        android:layout_height="@dimen/scan_circle_size"
+        android:layout_gravity="center"
+        android:contentDescription="@string/circle_button_content_desc"
+        android:src="@drawable/ic_button_circle" />
+
+    <ImageView
+        android:id="@+id/pulse_ring"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:contentDescription="@string/ring_pulse_desc"
+        android:src="@drawable/ic_pulse_ring"
+        android:visibility="invisible" />
+
+    <ImageButton
+        android:id="@+id/start_button"
+        android:layout_width="@dimen/start_button_size"
+        android:layout_height="@dimen/start_button_size"
+        android:layout_gravity="center"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/circle_button_content_desc"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_button_scan" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/status_bar_height"
+        android:minHeight="?attr/actionBarSize"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:titleTextAppearance="@style/AppTheme.TextAppearance.Toolbar" />
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/list_panel_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/status_toolbar_height"
+        android:background="@android:color/white"
+        android:visibility="gone"
+        app:elevation="@dimen/elevation_height">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/beacon_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</FrameLayout>

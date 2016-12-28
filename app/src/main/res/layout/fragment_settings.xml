@@ -74,7 +74,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px"
-                        android:background="@color/colorDivider" />
+                        android:background="@color/light_grey" />
 
                     <LinearLayout
                         android:id="@+id/settings_tracking"
@@ -99,7 +99,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px"
-                        android:background="@color/colorDivider" />
+                        android:background="@color/light_grey" />
 
                     <LinearLayout
                         android:id="@+id/settings_frequency"
@@ -125,7 +125,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px"
-                        android:background="@color/colorDivider" />
+                        android:background="@color/light_grey" />
 
                     <LinearLayout
                         android:id="@+id/settings_between_scan"
@@ -193,7 +193,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px"
-                        android:background="@color/colorDivider" />
+                        android:background="@color/light_grey" />
 
                     <LinearLayout
                         android:id="@+id/settings_major"
@@ -218,7 +218,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px"
-                        android:background="@color/colorDivider" />
+                        android:background="@color/light_grey" />
 
                     <LinearLayout
                         android:id="@+id/settings_minor"
@@ -244,7 +244,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px"
-                        android:background="@color/colorDivider" />
+                        android:background="@color/light_grey" />
 
                     <LinearLayout
                         android:id="@+id/settings_tx_power"
@@ -313,7 +313,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px"
-                        android:background="@color/colorDivider" />
+                        android:background="@color/light_grey" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -326,7 +326,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px"
-                        android:background="@color/colorDivider" />
+                        android:background="@color/light_grey" />
 
                     <LinearLayout
                         android:id="@+id/settings_max_lines"
@@ -351,7 +351,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px"
-                        android:background="@color/colorDivider" />
+                        android:background="@color/light_grey" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -389,7 +389,7 @@
                         android:id="@+id/divider_2"
                         android:layout_width="match_parent"
                         android:layout_height="1px"
-                        android:background="@color/colorDivider" />
+                        android:background="@color/light_grey" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -402,7 +402,7 @@
                         android:id="@+id/divider_3"
                         android:layout_width="match_parent"
                         android:layout_height="1px"
-                        android:background="@color/colorDivider" />
+                        android:background="@color/light_grey" />
 
                         <TextView
                             android:padding="@dimen/padding"

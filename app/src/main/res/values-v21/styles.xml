@@ -3,7 +3,7 @@
 
     <style name="AppTheme.TextAppearance" parent="@android:style/TextAppearance.Material">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/colorGrey</item>
+        <item name="android:textColor">@color/grey</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
 </resources>

@@ -2,14 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hogervries.beaconscanner">
 
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/beacon_scanner"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
-            android:name=".activity.IntroActivity"
+            android:name=".introduction.IntroActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,20 +21,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".scantransmit.ScanTransmitActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
+
         <activity
-            android:name=".activity.BeaconActivity"
+            android:name=".beacondetail.BeaconDetailActivity"
             android:label="@string/beacon_detail"
-            android:parentActivityName=".activity.MainActivity"
+            android:parentActivityName=".scantransmit.ScanTransmitActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Detail" />
+
         <activity
-            android:name=".activity.SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:label="@string/title_activity_settings1"
             android:theme="@style/AppTheme.Preference" />
+
     </application>
 
 </manifest>

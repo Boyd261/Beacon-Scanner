@@ -107,7 +107,7 @@
         android:layout_marginBottom="0dp"
         android:layout_marginEnd="0dp"
         android:layout_marginStart="72dp"
-        android:background="@color/colorDivider"
+        android:background="@color/light_grey"
         app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
         app:layout_constraintLeft_toLeftOf="@+id/constraintLayout"
         app:layout_constraintRight_toRightOf="@+id/constraintLayout"
