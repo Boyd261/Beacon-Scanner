@@ -1,11 +1,10 @@
-package com.hogervries.beaconscanner.data.service;
+package com.hogervries.beaconscanner.data;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.RemoteException;
-import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -17,10 +16,12 @@ import org.altbeacon.beacon.Region;
 import java.util.Collection;
 
 /**
- * Created by mdvri on 6-8-2016.
+ * Beacon Scanner.
+ *
+ * @author Boyd Hogerheijde.
+ * @author Mitchell de Vries.
  */
-
-public class BeaconScannerService implements BeaconConsumer {
+public class BeaconConsumerImpl implements BeaconConsumer {
 
     private static final String REGION_ID = "beacon_scanner_region";
 
@@ -41,9 +42,9 @@ public class BeaconScannerService implements BeaconConsumer {
         void onScanBeacons(Collection<Beacon> beacons);
     }
 
-    public BeaconScannerService(Context context,
-                                BeaconManager beaconManager,
-                                OnScanBeaconsListener scanBeaconsListener) {
+    public BeaconConsumerImpl(@NonNull Context context,
+                              @NonNull BeaconManager beaconManager,
+                              @NonNull OnScanBeaconsListener scanBeaconsListener) {
         this.context = context;
         this.beaconManager = beaconManager;
 
@@ -59,8 +60,8 @@ public class BeaconScannerService implements BeaconConsumer {
 
     private void setUpBeaconManager() {
         addBeaconLayouts();
-        setScanningPeriods();
-        enableTrackingCache();
+        setScanPeriod();
+        enableCache();
     }
 
     private void addBeaconLayouts() {
@@ -72,7 +73,7 @@ public class BeaconScannerService implements BeaconConsumer {
         beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout(BeaconParser.EDDYSTONE_URL_LAYOUT));
     }
 
-    private void setScanningPeriods() {
+    private void setScanPeriod() {
         beaconManager.setForegroundScanPeriod(1100);
         beaconManager.setForegroundBetweenScanPeriod(0);
 
@@ -81,7 +82,7 @@ public class BeaconScannerService implements BeaconConsumer {
         beaconManager.setBackgroundBetweenScanPeriod(0);
     }
 
-    private void enableTrackingCache() {
+    private void enableCache() {
         BeaconManager.setUseTrackingCache(true);
         beaconManager.setMaxTrackingAge(5000);
     }
@@ -104,9 +105,17 @@ public class BeaconScannerService implements BeaconConsumer {
         }
     }
 
+    public void bind() {
+        beaconManager.bind(this);
+    }
+
+    public void unbind() {
+        beaconManager.unbind(this);
+    }
+
     @Override
-    public Context getApplicationContext() {
-        return context.getApplicationContext();
+    public boolean bindService(Intent intent, ServiceConnection serviceConnection, int i) {
+        return context.bindService(intent, serviceConnection, i);
     }
 
     @Override
@@ -115,7 +124,7 @@ public class BeaconScannerService implements BeaconConsumer {
     }
 
     @Override
-    public boolean bindService(Intent intent, ServiceConnection serviceConnection, int i) {
-        return context.bindService(intent, serviceConnection, i);
+    public Context getApplicationContext() {
+        return context.getApplicationContext();
     }
 }

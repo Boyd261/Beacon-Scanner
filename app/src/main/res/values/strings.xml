@@ -46,9 +46,9 @@
     <string name="action">Action</string>
     <string name="detail_type_beacon">EddyStone</string>
 
-    <string name="tab_details_title">Details</string>
+    <string name="tab_title_detail">Details</string>
     <string name="rssi_legend_label">"RSSI(Received Signal Strength Indicator)"</string>
-    <string name="tab_log_title">Log</string>
+    <string name="tab_title_log">Log</string>
     <string name="distance_text">Distance: %1$sm</string>
     <string name="chart_description" />
     <string name="title_activity_settings1">Settings</string>

@@ -5,10 +5,12 @@ import org.altbeacon.beacon.Beacon;
 import java.util.Comparator;
 
 /**
- * Created by boydhogerheijde on 28/12/2016.
+ * Beacon Scanner.
+ *
+ * @author Boyd Hogerheijde.
+ * @author Mitchell de Vries.
  */
-
-public class BeaconComparator implements Comparator<Beacon> {
+public class BeaconDistanceComparator implements Comparator<Beacon> {
 
     @Override
     public int compare(Beacon beacon, Beacon beaconToCompare) {

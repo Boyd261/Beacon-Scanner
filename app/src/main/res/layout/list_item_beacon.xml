@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    android:id="@+id/constraintLayout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="82dp"
+    android:background="@color/white"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="0dp">
 
@@ -20,13 +20,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/beacon_icon_image"
         app:layout_constraintRight_toLeftOf="@+id/beacon_action_button"
-        app:layout_constraintTop_toTopOf="@+id/constraintLayout"
-        tools:layout_constraintLeft_creator="0"
-        tools:layout_constraintRight_creator="0"
-        tools:layout_constraintTop_creator="0"
-        tools:layout_editor_absoluteX="72dp"
-        tools:layout_editor_absoluteY="16dp"
-        tools:text="Beacon"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Beacon" />
 
     <TextView
         android:id="@+id/beacon_uuid_text"
@@ -34,19 +29,12 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="0dp"
         android:textAppearance="@style/AppTheme.TextAppearance"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/beacon_icon_image"
         app:layout_constraintRight_toLeftOf="@+id/beacon_action_button"
         app:layout_constraintTop_toBottomOf="@+id/beacon_type_text"
-        tools:layout_constraintBottom_creator="0"
-        tools:layout_constraintLeft_creator="0"
-        tools:layout_constraintRight_creator="0"
-        tools:layout_constraintTop_creator="0"
-        tools:layout_editor_absoluteX="72dp"
-        tools:layout_editor_absoluteY="9dp"
-        tools:text="UUID"/>
+        tools:text="UUID" />
 
     <TextView
         android:id="@+id/beacon_distance_text"
@@ -60,12 +48,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/beacon_icon_image"
         app:layout_constraintRight_toLeftOf="@+id/beacon_action_button"
-        tools:layout_constraintBottom_creator="0"
-        tools:layout_constraintLeft_creator="0"
-        tools:layout_constraintRight_creator="0"
-        tools:layout_editor_absoluteX="72dp"
-        tools:layout_editor_absoluteY="0dp"
-        tools:text="Distance"/>
+        tools:text="Distance" />
 
     <ImageView
         android:id="@+id/beacon_icon_image"
@@ -75,13 +58,9 @@
         android:layout_marginTop="11dp"
         android:contentDescription="Beacon type image"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_beacon"
-        app:layout_constraintLeft_toLeftOf="@+id/constraintLayout"
-        app:layout_constraintTop_toTopOf="@+id/constraintLayout"
-        tools:layout_constraintLeft_creator="0"
-        tools:layout_constraintTop_creator="0"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="16dp"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_beacon" />
 
     <ImageView
         android:id="@+id/beacon_action_button"
@@ -92,29 +71,18 @@
         android:background="@android:color/transparent"
         android:contentDescription="Beacon action button"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_action"
-        app:layout_constraintRight_toRightOf="@+id/constraintLayout"
-        app:layout_constraintTop_toTopOf="@+id/constraintLayout"
-        tools:layout_constraintRight_creator="0"
-        tools:layout_constraintTop_creator="0"
-        tools:layout_editor_absoluteX="330dp"
-        tools:layout_editor_absoluteY="30dp"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_action" />
 
     <View
         android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginBottom="0dp"
-        android:layout_marginEnd="0dp"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
         android:layout_marginStart="72dp"
         android:background="@color/light_grey"
-        app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
-        app:layout_constraintLeft_toLeftOf="@+id/constraintLayout"
-        app:layout_constraintRight_toRightOf="@+id/constraintLayout"
-        tools:layout_constraintBottom_creator="0"
-        tools:layout_constraintLeft_creator="0"
-        tools:layout_constraintRight_creator="0"
-        tools:layout_editor_absoluteX="72dp"
-        tools:layout_editor_absoluteY="81dp"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

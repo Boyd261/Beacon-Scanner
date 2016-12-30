@@ -10,11 +10,11 @@ import android.support.v7.app.AlertDialog;
 import com.hogervries.beaconscanner.R;
 
 /**
- * Trifork Netherlands.
- * GuestApp Social.
- * Mitchell de Vries & Mohammed Ali.
+ * Beacon Scanner.
+ *
+ * @author Boyd Hogerheijde
+ * @author Mitchell de Vries
  */
-
 public class AddActionDialog extends DialogFragment {
 
     public static AddActionDialog newInstance() {

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hogervries.beaconscanner.R;
-import com.hogervries.beaconscanner.data.BeaconComparator;
+import com.hogervries.beaconscanner.data.BeaconDistanceComparator;
 
 import org.altbeacon.beacon.Beacon;
 
@@ -20,7 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Beacon BeaconScannerService.
+ * Beacon Scanner.
  *
  * @author Boyd Hogerheijde.
  * @author Mitchell de Vries.
@@ -30,19 +30,8 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Be
     private List<Beacon> beacons;
     private OnBeaconClickListener beaconClickListener;
 
-    /**
-     * Callback which has to be implemented by the hosting activity.
-     * <p/>
-     * Callback interface allows for a component to be a completely self-contained,
-     * modular component that defines its own layout and behaviour.
-     */
     public interface OnBeaconClickListener {
 
-        /**
-         * Handles on beacon selected event.
-         *
-         * @param beacon Selected beacon.
-         */
         void onBeaconClicked(Beacon beacon);
     }
 
@@ -85,7 +74,7 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Be
 
     private void setList(List<Beacon> beacons) {
         this.beacons = beacons;
-        Collections.sort(this.beacons, new BeaconComparator());
+        Collections.sort(this.beacons, new BeaconDistanceComparator());
     }
 
     class BeaconHolder extends RecyclerView.ViewHolder {
@@ -98,6 +87,5 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Be
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
-
     }
 }

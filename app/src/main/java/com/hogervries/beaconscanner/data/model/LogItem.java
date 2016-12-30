@@ -3,7 +3,7 @@ package com.hogervries.beaconscanner.data.model;
 import android.support.annotation.DrawableRes;
 
 /**
- * Beacon BeaconScannerService, file created on 07/03/16.
+ * Beacon Scanner.
  *
  * @author Boyd Hogerheijde
  * @author Mitchell de Vries

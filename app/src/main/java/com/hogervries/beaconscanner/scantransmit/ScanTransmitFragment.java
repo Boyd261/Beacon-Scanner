@@ -28,7 +28,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 
-import com.hogervries.beaconscanner.data.service.BeaconScannerService;
+import com.hogervries.beaconscanner.data.BeaconConsumerImpl;
 import com.hogervries.beaconscanner.R;
 import com.hogervries.beaconscanner.beacondetail.BeaconDetailActivity;
 import com.hogervries.beaconscanner.settings.SettingsActivity;
@@ -49,7 +49,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static com.hogervries.beaconscanner.data.service.BeaconScannerService.OnScanBeaconsListener;
+import static com.hogervries.beaconscanner.data.BeaconConsumerImpl.OnScanBeaconsListener;
 
 /**
  * Beacon Scanner.
@@ -97,26 +97,23 @@ public class ScanTransmitFragment extends Fragment {
     OnScanBeaconsListener beaconScanListener = new OnScanBeaconsListener() {
         @Override
         public void onScanBeacons(final Collection<Beacon> beacons) {
-            if (isAdded()) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (isScanning) {
+                        if (isAdded() && isScanning) {
                             updateBeaconList((List<Beacon>) beacons);
                         }
                     }
                 });
-            }
         }
     };
 
-    private BeaconScannerService beaconScannerService;
+    private BeaconConsumerImpl beaconConsumerImpl;
     private BeaconManager beaconManager;
     private BeaconListAdapter beaconListAdapter;
     private MenuItem stopMenuButton;
     private Unbinder viewUnbinder;
 
-    // TODO: 28/12/2016 mode enumeration maybe?
     private int mode;
     private boolean isScanning;
     private boolean isTransmitting;
@@ -131,7 +128,7 @@ public class ScanTransmitFragment extends Fragment {
         setHasOptionsMenu(true);
 
         beaconManager = BeaconManager.getInstanceForApplication(getActivity());
-        beaconScannerService = new BeaconScannerService(getActivity(), beaconManager, beaconScanListener);
+        beaconConsumerImpl = new BeaconConsumerImpl(getActivity(), beaconManager, beaconScanListener);
     }
 
     @Nullable
@@ -193,7 +190,7 @@ public class ScanTransmitFragment extends Fragment {
     public void onPause() {
         super.onPause();
         if (isScanning) {
-            unbindBeaconScannerService();
+            beaconConsumerImpl.unbind();
         }
     }
 
@@ -239,14 +236,14 @@ public class ScanTransmitFragment extends Fragment {
     @OnClick(R.id.mode_switch)
     void onModeSwitched() {
         if (mode == SCANNING) {
-            onTransmitModeClicked();
+            switchToTransmitMode();
         } else {
-            onScanModeClicked();
+            switchToScanMode();
         }
     }
 
     @OnClick(R.id.scan_mode_button)
-    void onScanModeClicked() {
+    void switchToScanMode() {
         mode = SCANNING;
         modeSwitch.setChecked(false);
         scanModeButton.setTextColor(white);
@@ -257,7 +254,7 @@ public class ScanTransmitFragment extends Fragment {
     }
 
     @OnClick(R.id.transmit_mode_button)
-    void onTransmitModeClicked() {
+    void switchToTransmitMode() {
         mode = TRANSMIT;
         modeSwitch.setChecked(true);
         scanModeButton.setTextColor(grey);
@@ -277,7 +274,7 @@ public class ScanTransmitFragment extends Fragment {
 
     private void startScanning() {
         if (!isBluetoothLEAvailable()) {
-            showBluetoothLENotAvailable();
+            showBluetoothLENotAvailableMessage();
             return;
         }
 
@@ -285,7 +282,8 @@ public class ScanTransmitFragment extends Fragment {
             isScanning = true;
             stopMenuButton.setVisible(true);
             startPulseAnimation();
-            bindBeaconScannerService();
+
+            beaconConsumerImpl.bind();
         } else {
             requestEnableBluetooth();
         }
@@ -294,20 +292,12 @@ public class ScanTransmitFragment extends Fragment {
     private void stopScanning() {
         isScanning = false;
         stopMenuButton.setVisible(false);
-
         stopPulseAnimation();
-        unbindBeaconScannerService();
+
+        beaconConsumerImpl.unbind();
 
         // Passing an empty list will slide the list panel down again.
         updateBeaconList(new ArrayList<Beacon>());
-    }
-
-    private void bindBeaconScannerService() {
-        beaconManager.bind(beaconScannerService);
-    }
-
-    private void unbindBeaconScannerService() {
-        beaconManager.unbind(beaconScannerService);
     }
 
     private void toggleTransmitting() {
@@ -335,17 +325,17 @@ public class ScanTransmitFragment extends Fragment {
 
         startButtonCircle.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.expand));
         startButton.setImageResource(R.drawable.ic_button_stop);
-        modeSwitchLayout.setVisibility(View.GONE);
         pulseRing.setVisibility(View.VISIBLE);
         pulseRing.startAnimation(pulseAnimation);
+        modeSwitchLayout.setVisibility(View.GONE);
     }
 
     private void stopPulseAnimation() {
         startButtonCircle.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.contract));
         startButton.setImageDrawable(mode == SCANNING ? scanIcon : transmitIcon);
-        modeSwitchLayout.setVisibility(View.VISIBLE);
         pulseRing.setVisibility(View.GONE);
         pulseRing.clearAnimation();
+        modeSwitchLayout.setVisibility(View.VISIBLE);
     }
 
     private boolean isBluetoothLEAvailable() {
@@ -360,7 +350,7 @@ public class ScanTransmitFragment extends Fragment {
         return isBluetoothLEAvailable;
     }
 
-    private void showBluetoothLENotAvailable() {
+    private void showBluetoothLENotAvailableMessage() {
         new AlertDialog.Builder(getActivity())
                 .setTitle("Bluetooth LE not supported")
                 .setMessage("Bluetooth LE is supported by your device. Without Bluetooth LE this application does not work.")

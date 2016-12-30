@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * Beacon BeaconScannerService, file created on 07/03/16.
+ * Beacon Scanner.
  *
  * @author Boyd Hogerheijde
  * @author Mitchell de Vries
