@@ -24,7 +24,7 @@
         tools:text="Beacon" />
 
     <TextView
-        android:id="@+id/beacon_uuid_text"
+        android:id="@+id/beacon_info_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"

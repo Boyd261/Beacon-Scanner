@@ -11,6 +11,7 @@ import com.hogervries.beaconscanner.R;
 import com.hogervries.beaconscanner.data.BeaconDistanceComparator;
 
 import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.utils.UrlBeaconUrlCompressor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,15 +52,36 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Be
     public void onBindViewHolder(BeaconHolder holder, int position) {
         final Beacon beacon = beacons.get(position);
 
-        holder.beaconTypeTextView.setText("Beacon");
-        holder.uuidTextView.setText("UUID");
-        holder.distanceTextView.setText("Distance");
+        String beaconType;
+        String beaconInfo;
+        if (isEddystoneUID(beacon)) {
+            beaconType = "Eddystone";
+            beaconInfo = beacon.getId1() + "" + beacon.getId2();
+        } else if (isEddystoneURL(beacon)) {
+            beaconType = "Eddystone";
+            beaconInfo = UrlBeaconUrlCompressor.uncompress(beacon.getId1().toByteArray());
+        } else {
+            beaconType = "iBeacon";
+            beaconInfo = "Maj: " + beacon.getId2().toString() + " Min: " + beacon.getId3().toString();
+        }
+
+        holder.beaconTypeTextView.setText(beaconType);
+        holder.infoTextView.setText(beaconInfo);
+        holder.distanceTextView.setText(String.valueOf(beacon.getDistance()));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 beaconClickListener.onBeaconClicked(beacon);
             }
         });
+    }
+
+    private boolean isEddystoneUID(Beacon beacon) {
+        return beacon.getServiceUuid() == 0xfeaa && beacon.getBeaconTypeCode() == 0x00;
+    }
+
+    private boolean isEddystoneURL(Beacon beacon) {
+        return beacon.getServiceUuid() == 0xfeaa && beacon.getBeaconTypeCode() == 0x10;
     }
 
     @Override
@@ -80,7 +102,7 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Be
     class BeaconHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.beacon_type_text) TextView beaconTypeTextView;
-        @BindView(R.id.beacon_uuid_text) TextView uuidTextView;
+        @BindView(R.id.beacon_info_text) TextView infoTextView;
         @BindView(R.id.beacon_distance_text) TextView distanceTextView;
 
         public BeaconHolder(View itemView) {

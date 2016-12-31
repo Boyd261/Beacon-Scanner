@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
+import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
@@ -21,9 +23,10 @@ import java.util.Collection;
  * @author Boyd Hogerheijde.
  * @author Mitchell de Vries.
  */
-public class BeaconConsumerImpl implements BeaconConsumer {
+public class Scanner implements BeaconConsumer, RangeNotifier, MonitorNotifier {
 
-    private static final String REGION_ID = "beacon_scanner_region";
+    private static final String TAG = "Scanner";
+    private static final String REGION_ID = "all_beacons_region";
 
     private Context context;
     private BeaconManager beaconManager;
@@ -34,6 +37,7 @@ public class BeaconConsumerImpl implements BeaconConsumer {
      * Interface must be implemented by classes using this service.
      */
     public interface OnScanBeaconsListener {
+
         /**
          * Called when beacons are scanned.
          *
@@ -42,9 +46,9 @@ public class BeaconConsumerImpl implements BeaconConsumer {
         void onScanBeacons(Collection<Beacon> beacons);
     }
 
-    public BeaconConsumerImpl(@NonNull Context context,
-                              @NonNull BeaconManager beaconManager,
-                              @NonNull OnScanBeaconsListener scanBeaconsListener) {
+    public Scanner(@NonNull Context context,
+                   @NonNull BeaconManager beaconManager,
+                   @NonNull OnScanBeaconsListener scanBeaconsListener) {
         this.context = context;
         this.beaconManager = beaconManager;
 
@@ -87,30 +91,48 @@ public class BeaconConsumerImpl implements BeaconConsumer {
         beaconManager.setMaxTrackingAge(5000);
     }
 
+    public void start() {
+        Log.d(TAG, "start: Starting scanning for beacons.");
+        beaconManager.bind(this);
+    }
+
+    public void stop() {
+        Log.d(TAG, "stop: Stopping scanning for beacons.");
+        beaconManager.unbind(this);
+    }
+
     @Override
     public void onBeaconServiceConnect() {
-        beaconManager.setRangeNotifier(new RangeNotifier() {
-            @Override
-            public void didRangeBeaconsInRegion(Collection<Beacon> collection, Region region) {
-                onScanBeaconsCallback.onScanBeacons(collection);
-            }
-        });
+        beaconManager.addMonitorNotifier(this);
+        beaconManager.addRangeNotifier(this);
 
+        Region region = new Region(REGION_ID, null, null, null);
         try {
-            // Starting ranging beacons within defined region(null values indicate that it scans for every beacon).
-            Region region = new Region(REGION_ID, null, null, null);
             beaconManager.startRangingBeaconsInRegion(region);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
-    public void bind() {
-        beaconManager.bind(this);
+    @Override
+    public void didEnterRegion(Region region) {
+        Log.d(TAG, "didEnterRegion: Beacon in defined region " + region + " detected.");
     }
 
-    public void unbind() {
-        beaconManager.unbind(this);
+    @Override
+    public void didExitRegion(Region region) {
+        Log.d(TAG, "didExitRegion: Beacon exited defined region " + region + ".");
+    }
+
+    @Override
+    public void didDetermineStateForRegion(int i, Region region) {
+        Log.d(TAG, "didDetermineStateForRegion: Beacon changed state in defined region " + region + ".");
+    }
+
+    @Override
+    public void didRangeBeaconsInRegion(Collection<Beacon> collection, Region region) {
+        Log.d(TAG, "didRangeBeaconsInRegion: ");
+        onScanBeaconsCallback.onScanBeacons(collection);
     }
 
     @Override
