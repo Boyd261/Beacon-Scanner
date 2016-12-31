@@ -100,6 +100,7 @@ public class ScanTransmitFragment extends Fragment {
             startActivity(BeaconDetailActivity.newIntent(getActivity(), beacon));
         }
     };
+    
     Scanner.OnScanBeaconsListener beaconScanListener = new Scanner.OnScanBeaconsListener() {
         @Override
         public void onScanBeacons(final Collection<Beacon> beacons) {
@@ -134,6 +135,7 @@ public class ScanTransmitFragment extends Fragment {
         setHasOptionsMenu(true);
 
         beaconManager = BeaconManager.getInstanceForApplication(getActivity());
+
         scanner = new Scanner(getActivity(), beaconManager, beaconScanListener);
         transmitter = new Transmitter(getActivity());
     }
@@ -170,8 +172,8 @@ public class ScanTransmitFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.stop_scanning:
-                stopScanning();
                 stopMenuButton.setVisible(false);
+                stopScanning();
                 return true;
             case R.id.settings:
                 startActivity(SettingsActivity.newIntent(getActivity()));
@@ -273,6 +275,7 @@ public class ScanTransmitFragment extends Fragment {
     @OnClick(R.id.scan_mode_button)
     void switchToScanMode() {
         mode = SCANNING;
+
         modeSwitch.setChecked(false);
         scanModeButton.setTextColor(white);
         transmitModeButton.setTextColor(grey);
@@ -283,6 +286,7 @@ public class ScanTransmitFragment extends Fragment {
     @OnClick(R.id.transmit_mode_button)
     void switchToTransmitMode() {
         mode = TRANSMIT;
+
         modeSwitch.setChecked(true);
         scanModeButton.setTextColor(grey);
         transmitModeButton.setTextColor(white);
@@ -301,15 +305,20 @@ public class ScanTransmitFragment extends Fragment {
     private void startScanning() {
         isScanning = true;
         stopMenuButton.setVisible(true);
-        startPulseAnimation();
+
         scanner.start();
+
+        startPulseAnimation();
     }
 
     private void stopScanning() {
         isScanning = false;
         stopMenuButton.setVisible(false);
-        stopPulseAnimation();
+
         scanner.stop();
+
+        stopPulseAnimation();
+
 
         // Passing an empty list will slide the list panel down again.
         updateBeaconList(new ArrayList<Beacon>());
@@ -325,19 +334,22 @@ public class ScanTransmitFragment extends Fragment {
 
     private void startTransmitting() {
         isTransmitting = true;
-        startPulseAnimation();
         transmitter.start();
+
+        startPulseAnimation();
     }
 
     private void stopTransmitting() {
         isTransmitting = false;
-        stopPulseAnimation();
         transmitter.stop();
+
+        stopPulseAnimation();
     }
 
     private void startPulseAnimation() {
         AnimationSet pulseAnimation = new AnimationSet(false);
         pulseAnimation.addAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.pulse));
+
         startButtonCircle.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.expand));
         startButton.setImageResource(R.drawable.ic_button_stop);
         pulseRing.setVisibility(View.VISIBLE);
