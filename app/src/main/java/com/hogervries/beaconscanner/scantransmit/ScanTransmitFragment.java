@@ -3,10 +3,7 @@ package com.hogervries.beaconscanner.scantransmit;
 import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -41,6 +38,7 @@ import com.hogervries.beaconscanner.R;
 import com.hogervries.beaconscanner.beacondetail.BeaconDetailActivity;
 import com.hogervries.beaconscanner.data.Scanner;
 import com.hogervries.beaconscanner.data.Transmitter;
+import com.hogervries.beaconscanner.data.receiver.BluetoothStateReceiver;
 import com.hogervries.beaconscanner.settings.SettingsActivity;
 
 import org.altbeacon.beacon.Beacon;
@@ -97,13 +95,6 @@ public class ScanTransmitFragment extends Fragment {
     @BindDrawable(R.drawable.ic_button_scan) Drawable scanIcon;
     @BindDrawable(R.drawable.ic_button_transmit) Drawable transmitIcon;
 
-    BeaconListAdapter.OnBeaconClickListener beaconClickListener = new BeaconListAdapter.OnBeaconClickListener() {
-        @Override
-        public void onBeaconClicked(Beacon beacon) {
-            startActivity(BeaconDetailActivity.newIntent(getActivity(), beacon));
-        }
-    };
-
     Scanner.OnScanBeaconsListener beaconScanListener = new Scanner.OnScanBeaconsListener() {
         @Override
         public void onScanBeacons(final Collection<Beacon> beacons) {
@@ -118,19 +109,20 @@ public class ScanTransmitFragment extends Fragment {
         }
     };
 
-    private final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
+    BeaconListAdapter.OnBeaconClickListener beaconClickListener = new BeaconListAdapter.OnBeaconClickListener() {
         @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        public void onBeaconClicked(Beacon beacon) {
+            startActivity(BeaconDetailActivity.newIntent(getActivity(), beacon));
+        }
+    };
 
-            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED) &&
-                    bluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) {
-                if (isScanning) {
-                    stopScanning();
-                } else if (isTransmitting) {
-                    stopTransmitting();
-                }
+    BluetoothStateReceiver.BluetoothStateChangedListener bluetoothStateChangedListener = new BluetoothStateReceiver.BluetoothStateChangedListener() {
+        @Override
+        public void onBluetoothTurnedOff() {
+            if (isScanning) {
+                stopScanning();
+            } else if (isTransmitting) {
+                stopTransmitting();
             }
         }
     };
@@ -141,6 +133,7 @@ public class ScanTransmitFragment extends Fragment {
     private Scanner scanner;
     private Transmitter transmitter;
     private BeaconManager beaconManager;
+    private BluetoothStateReceiver bluetoothStateReceiver;
     private BeaconListAdapter beaconListAdapter;
     private MenuItem stopMenuButton;
     private Unbinder viewUnbinder;
@@ -154,13 +147,12 @@ public class ScanTransmitFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        getActivity().registerReceiver(bluetoothReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
-
         beaconManager = BeaconManager.getInstanceForApplication(getActivity());
+
+        bluetoothStateReceiver = new BluetoothStateReceiver();
 
         scanner = new Scanner(getActivity(), beaconManager, beaconScanListener);
         transmitter = new Transmitter(getActivity());
-
     }
 
     @Nullable
@@ -230,8 +222,16 @@ public class ScanTransmitFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        bluetoothStateReceiver.register(getActivity(), bluetoothStateChangedListener);
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
+
+        bluetoothStateReceiver.unregister(getActivity());
 
         if (isScanning) {
             scanner.stop();

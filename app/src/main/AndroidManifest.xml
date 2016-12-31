@@ -39,6 +39,7 @@
             android:label="@string/title_activity_settings1"
             android:theme="@style/AppTheme.Preference" />
 
+        <receiver android:name=".data.receiver.BluetoothStateReceiver" />
     </application>
 
 </manifest>
