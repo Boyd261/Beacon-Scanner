@@ -100,7 +100,6 @@ public class ScanTransmitFragment extends Fragment {
             startActivity(BeaconDetailActivity.newIntent(getActivity(), beacon));
         }
     };
-
     Scanner.OnScanBeaconsListener beaconScanListener = new Scanner.OnScanBeaconsListener() {
         @Override
         public void onScanBeacons(final Collection<Beacon> beacons) {
@@ -135,7 +134,6 @@ public class ScanTransmitFragment extends Fragment {
         setHasOptionsMenu(true);
 
         beaconManager = BeaconManager.getInstanceForApplication(getActivity());
-
         scanner = new Scanner(getActivity(), beaconManager, beaconScanListener);
         transmitter = new Transmitter(getActivity());
     }
@@ -188,9 +186,10 @@ public class ScanTransmitFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_ENABLE_BLUETOOTH) {
             if (resultCode == Activity.RESULT_OK) {
-                // TODO: 31/12/2016 show snackbar or smth.
+                Log.d(TAG, "onActivityResult: bluetooth enabled.");
             } else {
-                // TODO: 28/12/2016 show message to user stating that without BLT the app doesn't do anything.
+                showMessage("Bluetooth disabled",
+                        "Since bluetooth is necessary this app will not be able to discover beacons.");
             }
         }
     }
@@ -199,6 +198,9 @@ public class ScanTransmitFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PERMISSION_REQUEST_COARSE_LOCATION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "onRequestPermissionsResult: permission granted");
+        } else {
+            showMessage("Functionality limited",
+                    "Since location access has not been granted, this app will not be able to discover beacons.");
         }
     }
 
@@ -250,7 +252,7 @@ public class ScanTransmitFragment extends Fragment {
             return;
         }
 
-        if (isBluetoothAvailable()) {
+        if (checkBluetoothAvailability()) {
             if (mode == SCANNING) {
                 toggleScanning();
             } else {
@@ -275,7 +277,6 @@ public class ScanTransmitFragment extends Fragment {
         scanModeButton.setTextColor(white);
         transmitModeButton.setTextColor(grey);
         startButton.setImageDrawable(scanIcon);
-
         setToolbarTitle(scannerTitle);
     }
 
@@ -286,7 +287,6 @@ public class ScanTransmitFragment extends Fragment {
         scanModeButton.setTextColor(grey);
         transmitModeButton.setTextColor(white);
         startButton.setImageDrawable(transmitIcon);
-
         setToolbarTitle(transmitTitle);
     }
 
@@ -302,7 +302,6 @@ public class ScanTransmitFragment extends Fragment {
         isScanning = true;
         stopMenuButton.setVisible(true);
         startPulseAnimation();
-
         scanner.start();
     }
 
@@ -310,7 +309,6 @@ public class ScanTransmitFragment extends Fragment {
         isScanning = false;
         stopMenuButton.setVisible(false);
         stopPulseAnimation();
-
         scanner.stop();
 
         // Passing an empty list will slide the list panel down again.
@@ -340,7 +338,6 @@ public class ScanTransmitFragment extends Fragment {
     private void startPulseAnimation() {
         AnimationSet pulseAnimation = new AnimationSet(false);
         pulseAnimation.addAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.pulse));
-
         startButtonCircle.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.expand));
         startButton.setImageResource(R.drawable.ic_button_stop);
         pulseRing.setVisibility(View.VISIBLE);
@@ -356,13 +353,14 @@ public class ScanTransmitFragment extends Fragment {
         modeSwitchLayout.setVisibility(View.VISIBLE);
     }
 
-    private boolean isBluetoothAvailable() {
+    private boolean checkBluetoothAvailability() {
         boolean isBluetoothAvailable;
 
         try {
             isBluetoothAvailable = beaconManager.checkAvailability();
         } catch (BleNotAvailableException e) {
-            showBluetoothLENotAvailableMessage();
+            showMessage("Bluetooth LE not supported",
+                    "Bluetooth LE is supported by your device. Without Bluetooth LE this application does not work.");
             return false;
         }
 
@@ -371,15 +369,6 @@ public class ScanTransmitFragment extends Fragment {
         }
 
         return isBluetoothAvailable;
-    }
-
-    private void showBluetoothLENotAvailableMessage() {
-        new AlertDialog.Builder(getActivity())
-                .setTitle("Bluetooth LE not supported")
-                .setMessage("Bluetooth LE is supported by your device. Without Bluetooth LE this application does not work.")
-                .setPositiveButton(android.R.string.ok, null)
-                .create()
-                .show();
     }
 
     private void requestEnableBluetooth() {
@@ -398,5 +387,14 @@ public class ScanTransmitFragment extends Fragment {
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                 PERMISSION_REQUEST_COARSE_LOCATION
         );
+    }
+
+    private void showMessage(String title, String message) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, null)
+                .create()
+                .show();
     }
 }
