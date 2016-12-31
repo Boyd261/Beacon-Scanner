@@ -217,14 +217,15 @@ public class ScanTransmitFragment extends Fragment {
     }
 
     private void updateBeaconList(List<Beacon> beacons) {
-        beaconListAdapter.replaceListData(beacons);
-        if (beaconListAdapter.getItemCount() > 0) {
+        if (listPanelLayout.getVisibility() == View.GONE && !beacons.isEmpty()) {
             listPanelLayout.setVisibility(View.VISIBLE);
             listPanelLayout.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_bottom));
         } else {
             listPanelLayout.setVisibility(View.GONE);
             listPanelLayout.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom));
         }
+        
+        beaconListAdapter.replaceListData(beacons);
     }
 
     @OnClick({R.id.start_button, R.id.start_button_circle})
