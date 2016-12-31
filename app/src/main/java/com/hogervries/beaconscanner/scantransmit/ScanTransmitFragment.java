@@ -220,11 +220,11 @@ public class ScanTransmitFragment extends Fragment {
         if (listPanelLayout.getVisibility() == View.GONE && !beacons.isEmpty()) {
             listPanelLayout.setVisibility(View.VISIBLE);
             listPanelLayout.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_bottom));
-        } else {
+        } else if (listPanelLayout.getVisibility() == View.VISIBLE && beacons.isEmpty()){
             listPanelLayout.setVisibility(View.GONE);
             listPanelLayout.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom));
         }
-        
+
         beaconListAdapter.replaceListData(beacons);
     }
 
