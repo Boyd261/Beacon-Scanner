@@ -3,7 +3,10 @@ package com.hogervries.beaconscanner.scantransmit;
 import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -100,7 +103,7 @@ public class ScanTransmitFragment extends Fragment {
             startActivity(BeaconDetailActivity.newIntent(getActivity(), beacon));
         }
     };
-    
+
     Scanner.OnScanBeaconsListener beaconScanListener = new Scanner.OnScanBeaconsListener() {
         @Override
         public void onScanBeacons(final Collection<Beacon> beacons) {
@@ -112,6 +115,23 @@ public class ScanTransmitFragment extends Fragment {
                     }
                 }
             });
+        }
+    };
+
+    private final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED) &&
+                    bluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) {
+                if (isScanning) {
+                    stopScanning();
+                } else if (isTransmitting) {
+                    stopTransmitting();
+                }
+            }
         }
     };
 
@@ -134,10 +154,13 @@ public class ScanTransmitFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
+        getActivity().registerReceiver(bluetoothReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+
         beaconManager = BeaconManager.getInstanceForApplication(getActivity());
 
         scanner = new Scanner(getActivity(), beaconManager, beaconScanListener);
         transmitter = new Transmitter(getActivity());
+
     }
 
     @Nullable
@@ -209,6 +232,7 @@ public class ScanTransmitFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+
         if (isScanning) {
             scanner.stop();
         } else if (isTransmitting) {
