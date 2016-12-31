@@ -1,18 +1,24 @@
 package com.hogervries.beaconscanner.scantransmit;
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -65,9 +71,11 @@ import butterknife.Unbinder;
  */
 public class ScanTransmitFragment extends Fragment {
 
+    private static final String TAG = "ScanTransmitFragment";
     private static final int SCANNING = 0;
     private static final int TRANSMIT = 1;
     private static final int REQUEST_ENABLE_BLUETOOTH = 2;
+    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 3;
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.start_button_circle) ImageView startButtonCircle;
@@ -96,14 +104,14 @@ public class ScanTransmitFragment extends Fragment {
     Scanner.OnScanBeaconsListener beaconScanListener = new Scanner.OnScanBeaconsListener() {
         @Override
         public void onScanBeacons(final Collection<Beacon> beacons) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isAdded() && isScanning) {
-                            updateBeaconList((List<Beacon>) beacons);
-                        }
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (isAdded() && isScanning) {
+                        updateBeaconList((List<Beacon>) beacons);
                     }
-                });
+                }
+            });
         }
     };
 
@@ -188,6 +196,13 @@ public class ScanTransmitFragment extends Fragment {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_COARSE_LOCATION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "onRequestPermissionsResult: permission granted");
+        }
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         if (isScanning) {
@@ -220,7 +235,7 @@ public class ScanTransmitFragment extends Fragment {
         if (listPanelLayout.getVisibility() == View.GONE && !beacons.isEmpty()) {
             listPanelLayout.setVisibility(View.VISIBLE);
             listPanelLayout.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_bottom));
-        } else if (listPanelLayout.getVisibility() == View.VISIBLE && beacons.isEmpty()){
+        } else if (listPanelLayout.getVisibility() == View.VISIBLE && beacons.isEmpty()) {
             listPanelLayout.setVisibility(View.GONE);
             listPanelLayout.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom));
         }
@@ -230,20 +245,16 @@ public class ScanTransmitFragment extends Fragment {
 
     @OnClick({R.id.start_button, R.id.start_button_circle})
     void onStartButtonClicked() {
-        if (!(isScanning || isTransmitting)) {
-            if (!isBluetoothLEAvailable()) {
-                showBluetoothLENotAvailableMessage();
-                return;
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !hasCoarseLocationPermission()) {
+            requestCoarseLocationPermission();
+            return;
+        }
 
-            if (isBlueToothEnabled()) {
-                if (mode == SCANNING) {
-                    toggleScanning();
-                } else {
-                    toggleTransmitting();
-                }
+        if (isBluetoothAvailable()) {
+            if (mode == SCANNING) {
+                toggleScanning();
             } else {
-                requestEnableBluetooth();
+                toggleTransmitting();
             }
         }
     }
@@ -314,18 +325,15 @@ public class ScanTransmitFragment extends Fragment {
         }
     }
 
-    // TODO: 28/12/2016 implement transmitting
     private void startTransmitting() {
         isTransmitting = true;
         startPulseAnimation();
-
         transmitter.start();
     }
 
     private void stopTransmitting() {
         isTransmitting = false;
         stopPulseAnimation();
-
         transmitter.stop();
     }
 
@@ -348,16 +356,21 @@ public class ScanTransmitFragment extends Fragment {
         modeSwitchLayout.setVisibility(View.VISIBLE);
     }
 
-    private boolean isBluetoothLEAvailable() {
-        boolean isBluetoothLEAvailable = false;
+    private boolean isBluetoothAvailable() {
+        boolean isBluetoothAvailable;
 
         try {
-            isBluetoothLEAvailable = beaconManager.checkAvailability();
+            isBluetoothAvailable = beaconManager.checkAvailability();
         } catch (BleNotAvailableException e) {
-            // Intentionally left blank.
+            showBluetoothLENotAvailableMessage();
+            return false;
         }
 
-        return isBluetoothLEAvailable;
+        if (!isBluetoothAvailable) {
+            requestEnableBluetooth();
+        }
+
+        return isBluetoothAvailable;
     }
 
     private void showBluetoothLENotAvailableMessage() {
@@ -369,19 +382,21 @@ public class ScanTransmitFragment extends Fragment {
                 .show();
     }
 
-    private boolean isBlueToothEnabled() {
-        boolean isBluetoothEnabled = false;
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        if (bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
-            isBluetoothEnabled = true;
-        }
-
-        return isBluetoothEnabled;
-    }
-
     private void requestEnableBluetooth() {
         Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BLUETOOTH);
+    }
+
+    private boolean hasCoarseLocationPermission() {
+        return ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestCoarseLocationPermission() {
+        ActivityCompat.requestPermissions(
+                getActivity(),
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                PERMISSION_REQUEST_COARSE_LOCATION
+        );
     }
 }
