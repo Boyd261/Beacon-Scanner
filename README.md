@@ -1,4 +1,4 @@
-# Beacon-Scanner (Plus) (Finally in development again - develop branch)
+# Beacon-Scanner (Plus)
 
 Scans, transmits and shows details of every iBeacon/Eddystone beacon in your area.
 
